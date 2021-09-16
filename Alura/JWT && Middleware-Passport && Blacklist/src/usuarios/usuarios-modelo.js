@@ -13,9 +13,9 @@ class Usuario {
     this.valida();
   }
 
-  static gerarSenhaHash(senha) {
-    const custoHash = 12;
-    return bcrypt.hash(senha, custoHash);
+  valida() {
+    validacoes.campoStringNaoNulo(this.nome, 'nome');
+    validacoes.campoStringNaoNulo(this.email, 'email');
   }
 
   async adiciona() {
@@ -24,20 +24,6 @@ class Usuario {
     }
 
     return usuariosDao.adiciona(this);
-  }
-
-  async adicionaSenha(senha) {
-    validacoes.campoStringNaoNulo(senha, 'senha');
-    validacoes.campoTamanhoMinimo(senha, 'senha', 8);
-    validacoes.campoTamanhoMaximo(senha, 'senha', 64);
-
-    //Criptografa a senha
-    this.senhaHash = await Usuario.gerarSenhaHash(senha);
-  }
-
-  valida() {
-    validacoes.campoStringNaoNulo(this.nome, 'nome');
-    validacoes.campoStringNaoNulo(this.email, 'email');
   }
 
   async deleta() {
@@ -64,6 +50,20 @@ class Usuario {
 
   static lista() {
     return usuariosDao.lista();
+  }
+
+  static gerarSenhaHash(senha) {
+    const custoHash = 12;
+    return bcrypt.hash(senha, custoHash);
+  }
+
+  async adicionaSenha(senha) {
+    validacoes.campoStringNaoNulo(senha, 'senha');
+    validacoes.campoTamanhoMinimo(senha, 'senha', 8);
+    validacoes.campoTamanhoMaximo(senha, 'senha', 64);
+
+    //Criptografa a senha
+    this.senhaHash = await Usuario.gerarSenhaHash(senha);
   }
 }
 
